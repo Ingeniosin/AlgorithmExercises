@@ -27,11 +27,15 @@ namespace AlgorithmExercises.Algorithms {
 
       private static Polynomial ReadPolynomial(int id) {
          var readString = InputUtils.GetText($"Ingresa el polinomio [{id}] (Ej: 3x+2; 3x^3-2x^2+1; 3 o un formato similar): ", x => x != null).ToLower().Trim().Replace(" ", "").Replace("+", " +").Replace("-", " -").Split(' ').ToList();
-         if(readString[0].Equals("")) {
-            readString.RemoveAt(0);
+         if(readString[0].Equals("")) readString.RemoveAt(0);
+         List<Term> terms;
+         try {
+            terms = readString.Select(Term.GetInstance).ToList();
+         } catch(Exception e) {
+            Console.WriteLine($"El polinomio [{id}] no es valido. {e.Message}");
+            return ReadPolynomial(id);
          }
-         return new Polynomial(readString.Select(Term.GetInstance).ToList());
-         
+         return new Polynomial(terms);
       }
       
       private Operation SelectOperation() {
